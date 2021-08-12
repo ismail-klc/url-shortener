@@ -71,6 +71,10 @@ export class AuthService {
             throw new BadRequestException(['Wrong password or email']);
         }
 
+        if (existedUser.isRegisteredWithGoogle) {
+            throw new BadRequestException('This email is registered with Google');
+        }
+
         // compare passwords
         if (!await bcrypt.compare(signInDto.password, existedUser.password)) {
             throw new BadRequestException(['Wrong password or email']);

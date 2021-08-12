@@ -31,9 +31,11 @@ const MyNavbar: NextPage<Props> = ({ user }) => {
                         {
                             user && <>
                                 <Nav.Link >{user.email}</Nav.Link>
-                                <Nav.Link eventKey={2} href="#memes">
-                                    Logout
-                                </Nav.Link>
+                                <Link href="/auth/logout">
+                                <a
+                                    className={`nav-link `}
+                                    style={{ cursor: 'pointer' }}>Logout</a>
+                            </Link>
                             </>
                         }
                         {
