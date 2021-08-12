@@ -7,8 +7,7 @@ import { SignInDto } from './dtos/signin.dto';
 import { Response, Request } from 'express';
 import { AuthGuard } from './guards/auth.guard';
 import { CreateUserDto } from './dtos/create-user.dto';
-
-import { SetMetadata } from '@nestjs/common';
+import { TokenVerificationDto } from './dtos/token-verification.dto';
 
 
 @Controller('auth')
@@ -18,6 +17,16 @@ export class AuthController {
     @Post('signin')
     async login(@Body() signInDto: SignInDto, @Res({ passthrough: true }) res: Response) {
         const jwt = await this.authService.signIn(signInDto);
+        res.cookie('jwt', jwt, { httpOnly: true });
+
+        return {
+            msg: 'success'
+        }
+    }
+
+    @Post('google')
+    async googleAuth(@Body() data: any, @Res({ passthrough: true }) res: Response) {
+        const jwt = await this.authService.googleAuth(data.profile);
         res.cookie('jwt', jwt, { httpOnly: true });
 
         return {

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -6,14 +6,46 @@ import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { SignInDto } from './dtos/signin.dto';
 import { JwtService } from '@nestjs/jwt';
+import { google, Auth } from 'googleapis';
+import { ConfigService } from '@nestjs/config';
+
 
 @Injectable()
 export class AuthService {
+
+
+    oauthClient: Auth.OAuth2Client;
     constructor(
         @InjectRepository(User)
         private usersRepository: Repository<User>,
+        private readonly configService: ConfigService,
         private jwtService: JwtService,
-    ) { }
+    ) {
+        const clientID = this.configService.get('GOOGLE_AUTH_CLIENT_ID');
+        const clientSecret = this.configService.get('GOOGLE_AUTH_CLIENT_SECRET');
+
+        this.oauthClient = new google.auth.OAuth2(
+            clientID,
+            clientSecret
+        );
+    }
+
+    async googleAuth(data: any) {
+        let existedUser = await this.usersRepository.findOne({ email: data.email });
+        if (!existedUser) {
+            existedUser = await this.usersRepository.save({
+                email: data.email,
+                isRegisteredWithGoogle: true,
+                name: data.name
+            });
+        }
+
+        return await this.jwtService.signAsync({
+            id: existedUser.id,
+            email: existedUser.email,
+            isGoogleAuth: existedUser.isRegisteredWithGoogle
+        });
+    }
 
     async createUser(dto: CreateUserDto) {
         const existedUser = await this.usersRepository.findOne({ email: dto.email });
@@ -45,6 +77,10 @@ export class AuthService {
         }
 
         // return signed jwt token
-        return await this.jwtService.signAsync({ id: existedUser.id, email: existedUser.email });
+        return await this.jwtService.signAsync({
+            id: existedUser.id,
+            email: existedUser.email,
+            isGoogleAuth: existedUser.isRegisteredWithGoogle
+        });
     }
 }

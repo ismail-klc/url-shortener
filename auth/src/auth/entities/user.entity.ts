@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
  
 @Entity()
@@ -11,7 +12,11 @@ export class User {
   @Column()
   public name: string;
  
-  @Column()
-  public password: string;
+  @Column({ nullable: true})
+  @Exclude()
+  public password?: string;
+  
+  @Column({ default: false })
+  public isRegisteredWithGoogle: boolean;
 }
  
