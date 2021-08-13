@@ -15,6 +15,7 @@ export class AuthController {
     constructor(private readonly authService: AuthService) { }
 
     @Post('signin')
+    @HttpCode(200)
     async login(@Body() signInDto: SignInDto, @Res({ passthrough: true }) res: Response) {
         const jwt = await this.authService.signIn(signInDto);
         res.cookie('jwt', jwt, { httpOnly: true });

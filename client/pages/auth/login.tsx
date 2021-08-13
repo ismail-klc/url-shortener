@@ -20,9 +20,6 @@ const Login: NextPage = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
-        console.log(email, password);
-
         await doRequest();
     }
 

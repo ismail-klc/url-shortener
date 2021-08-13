@@ -1,9 +1,9 @@
 import { Global, Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtSecretRequestType } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 
 @Global()
@@ -14,12 +14,21 @@ import * as Joi from '@hapi/joi';
       validationSchema: Joi.object({
         GOOGLE_AUTH_CLIENT_ID: Joi.string().required(),
         GOOGLE_AUTH_CLIENT_SECRET: Joi.string().required(),
+        JWT_KEY: Joi.string().required()
       })
     }),
-    JwtModule.register({
-      secret: 'jwt-secret',
-      signOptions: { expiresIn: '6h' }
-  }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        return {
+          secret: configService.get('JWT_KEY'),
+          signOptions: {
+            expiresIn: '12h',
+          },
+        }
+      },
+      inject: [ConfigService]
+    }),
     TypeOrmModule.forRootAsync({
       useFactory: async () =>
         Object.assign(await getConnectionOptions(), {
@@ -27,7 +36,9 @@ import * as Joi from '@hapi/joi';
         }),
     }),
     AuthModule],
-    exports: [JwtModule]
+  exports: [JwtModule]
 
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private configService: ConfigService) { }
+}

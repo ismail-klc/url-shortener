@@ -9,12 +9,8 @@ import { JwtService } from '@nestjs/jwt';
 import { google, Auth } from 'googleapis';
 import { ConfigService } from '@nestjs/config';
 
-
 @Injectable()
 export class AuthService {
-
-
-    oauthClient: Auth.OAuth2Client;
     constructor(
         @InjectRepository(User)
         private usersRepository: Repository<User>,
@@ -24,10 +20,6 @@ export class AuthService {
         const clientID = this.configService.get('GOOGLE_AUTH_CLIENT_ID');
         const clientSecret = this.configService.get('GOOGLE_AUTH_CLIENT_SECRET');
 
-        this.oauthClient = new google.auth.OAuth2(
-            clientID,
-            clientSecret
-        );
     }
 
     async googleAuth(data: any) {
@@ -81,10 +73,12 @@ export class AuthService {
         }
 
         // return signed jwt token
-        return await this.jwtService.signAsync({
+        const jwt = this.jwtService.sign({
             id: existedUser.id,
             email: existedUser.email,
             isGoogleAuth: existedUser.isRegisteredWithGoogle
         });
+
+        return jwt;
     }
 }
