@@ -14,36 +14,40 @@ function CreateUrl() {
         body: {
             originalUrl, shortUrl
         },
-        onSuccess: () => Router.push('/')
+        onSuccess: () => Router.push('/urls')
     })
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        if (!shortUrl) {
+            setShortUrl(null)
+        }
         await doRequest();
     }
 
     return (
         <div>
             <Form onSubmit={handleSubmit} className="col-md-6 mx-auto mt-5">
-                <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Group className="mb-3" >
                     <Form.Label>Original Url</Form.Label>
                     <Form.Control
                     value={originalUrl} onChange={e => setOriginalUrl(e.target.value)}
                     type="url" placeholder="Enter original url" />
-                    <Form.Text className="text-muted">
-                        We'll never share your email with anyone else.
-                    </Form.Text>
+                    
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Group className="mb-3" >
                     <Form.Label>Short Url (Optinal)</Form.Label>
                     <Form.Control
                     value={shortUrl} onChange={e => setShortUrl(e.target.value)}
                     type="text" placeholder="Short url" />
+                    <Form.Text className="text-muted">
+                        Short url is optinal. Find a url between 6-9 characters not used before.
+                    </Form.Text>
                 </Form.Group>
                 {
                     errors.length > 0 &&
-                    "error"
+                    <Errors msg={errors}/>
                 }
                 <Button variant="primary" type="submit">
                     Submit

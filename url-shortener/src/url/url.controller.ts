@@ -24,8 +24,6 @@ export class UrlController {
     @HttpCode(200)
     @UseGuards(AuthGuard)
     createUrl(@Req() req: Request, @Body() dto: CreateUrlDto) {
-        console.log(dto);
-        
         return this.urlService.createUrl(dto, req.user.id);
     }
 
@@ -33,5 +31,12 @@ export class UrlController {
     @HttpCode(200)
     getOriginalUrl(@Query() query) {
         return this.urlService.getOriginalUrl(query.url);
+    }
+
+    @Get('my-urls')
+    @HttpCode(200)
+    @UseGuards(AuthGuard)
+    getUrlsByUser(@Req() req: Request,) {
+        return this.urlService.getUrlsByUserId(req.user.id);
     }
 }
