@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { getMongoRepository } from 'typeorm';
 import { UrlEntity } from './entities/url.entity'
 import { ObjectID } from 'mongodb';
@@ -37,5 +37,20 @@ export class UrlService {
         } catch (error) {
         }
 
+    }
+
+    async getOriginalUrl(url: string){
+        const urlRepository = getMongoRepository(UrlEntity);
+        const existedUrl = await urlRepository.findOne({
+            where: {
+                shortUrl: url
+            }
+        });
+
+        if (!existedUrl) {
+            throw new NotFoundException('Url not found');
+        }
+
+        return existedUrl;
     }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { UrlService } from './url.service';
 import { Request } from 'express';
 import { CreateUrlDto } from './dtos/create-url.dto';
@@ -23,8 +23,14 @@ export class UrlController {
     @Post('create')
     @HttpCode(200)
     @UseGuards(AuthGuard)
-    signOut(@Req() req: Request, @Body() dto: CreateUrlDto) {
+    createUrl(@Req() req: Request, @Body() dto: CreateUrlDto) {
         
         return this.urlService.createUrl(dto, req.user.id);
+    }
+
+    @Get()
+    @HttpCode(200)
+    getOriginalUrl(@Query() query) {
+        return this.urlService.getOriginalUrl(query.url);
     }
 }
