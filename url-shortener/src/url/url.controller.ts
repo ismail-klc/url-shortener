@@ -24,6 +24,7 @@ export class UrlController {
     @HttpCode(200)
     @UseGuards(AuthGuard)
     createUrl(@Req() req: Request, @Body() dto: CreateUrlDto) {
+        console.log(dto);
         
         return this.urlService.createUrl(dto, req.user.id);
     }

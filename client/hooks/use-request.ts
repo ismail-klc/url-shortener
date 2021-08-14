@@ -23,6 +23,8 @@ const useRequest = ({ url, method, body, onSuccess }: Props) => {
             });
 
             setErrors([]);
+            console.log(res.status);
+            
 
             if (onSuccess) {
                 onSuccess();

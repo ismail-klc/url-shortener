@@ -10,6 +10,11 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api');
 
+  app.enableCors({
+    origin: 'http://localhost:5000',
+    credentials: true
+  });
+
   await app.listen(3002, () => {
     console.log("listening on port 3002");
 
