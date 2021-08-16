@@ -1,5 +1,6 @@
 import '../styles/globals.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css'
 import type { AppContext, AppProps } from 'next/app'
 import buildClient from '../helpers/build-client';
 import MyNavbar from '../components/navbar';
@@ -18,7 +19,7 @@ function MyApp({ Component, pageProps, user }: MyProps) {
   return (
     <>
       <MyNavbar user={user} />
-      <Component {...pageProps} />
+      <Component {...pageProps} user={user}/>
     </>
   )
 }

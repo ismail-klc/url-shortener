@@ -1,5 +1,5 @@
 import axios, { Method } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
     url: string,
@@ -10,6 +10,13 @@ interface Props {
 
 const useRequest = ({ url, method, body, onSuccess }: Props) => {
     const [errors, setErrors] = useState<any[]>([]);
+    const [data, setData] = useState()
+
+    useEffect(() => {
+        if (onSuccess && data) {
+            onSuccess();
+        }
+    }, [data])
 
     const doRequest = async () => {
         const uri = `${process.env.APP_API_URL}${url}`
@@ -21,14 +28,9 @@ const useRequest = ({ url, method, body, onSuccess }: Props) => {
                 data: body,
                 withCredentials: true
             });
-
             setErrors([]);
-            console.log(res.status);
-            
+            setData(res.data)
 
-            if (onSuccess) {
-                onSuccess();
-            }
             return res.data;
         } catch (error) {
             if (error.response) {
@@ -40,7 +42,7 @@ const useRequest = ({ url, method, body, onSuccess }: Props) => {
         }
     }
 
-    return { doRequest, errors };
+    return { doRequest, errors, data };
 }
 
 export default useRequest
