@@ -5,10 +5,24 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
 import { UrlModule } from './url/url.module';
 import * as Joi from '@hapi/joi';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Global()
 @Module({
   imports: [
+    ClientsModule.register([
+      {
+        name: 'URL_SHORTENER_SRV',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://localhost:5672'],
+          queue: 'clicks_queue',
+          queueOptions: {
+            durable: false
+          },
+        },
+      },
+    ]),
     TypeOrmModule.forRootAsync({
       useFactory: async () =>
         Object.assign(await getConnectionOptions(), {
@@ -31,7 +45,7 @@ import * as Joi from '@hapi/joi';
       inject: [ConfigService]
     }),
     UrlModule],
-  exports: [JwtModule]
+  exports: [JwtModule, ClientsModule]
 
 })
 export class AppModule { }
