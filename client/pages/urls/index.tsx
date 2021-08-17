@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import buildClient from '../../helpers/build-client';
 import { GetServerSideProps } from 'next'
-import { Alert, Button, Table } from 'react-bootstrap';
+import { Alert, Table } from 'react-bootstrap';
 import Head from 'next/head';
 import withAuth from '../../hocs/withAuth';
 
@@ -12,7 +12,7 @@ interface UrlEntity {
     expirationDate: Date;
 }
 
-function MyUrls({ data }: any) {
+function MyUrls({ data, clicks }: any) {
     const [isCopied, setIsCopied] = useState(false)
     const [text, setText] = useState('')
 
@@ -40,6 +40,7 @@ function MyUrls({ data }: any) {
                         <th>Id</th>
                         <th>Short Url</th>
                         <th>Original Url</th>
+                        <th>Clicked</th>
                         <th>Expiration Date</th>
                     </tr>
                 </thead>
@@ -58,6 +59,7 @@ function MyUrls({ data }: any) {
                                 <td>
                                     <a href={x.originalUrl} target="_blank">{x.originalUrl}</a>
                                 </td>
+                                <td>{clicks[x.shortUrl] || 0}</td>
                                 <td>{x.expirationDate}</td>
                             </tr>
                         ))
@@ -73,10 +75,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     try {
         const { data } = await client.get(`/api/url/my-urls`);
+        const res = await client.get(`/api/clicks`);
+        const clicks = res.data
 
         return {
             props: {
-                data
+                data, clicks
             }
         };
 

@@ -19,7 +19,6 @@ export class AuthGuard implements CanActivate {
   async validateRequest(request: any): Promise<boolean> {
     const token = request.cookies.jwt;
 
-
     try {
       const payload = await this.jwtService.verifyAsync(token);
       request.user = payload;

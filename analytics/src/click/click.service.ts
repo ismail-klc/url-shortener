@@ -14,7 +14,12 @@ export class ClickService {
             }
         })
 
-        return clicks;
+        let myClicks = {}
+        for (const click of clicks) {
+            myClicks[click.shortUrl] = click.clicked
+        }
+
+        return myClicks;
     }
 
     async handleClicked(data: UrlData) {
