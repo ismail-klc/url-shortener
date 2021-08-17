@@ -4,6 +4,8 @@ import '@fortawesome/fontawesome-free/css/all.min.css'
 import type { AppContext, AppProps } from 'next/app'
 import buildClient from '../helpers/build-client';
 import MyNavbar from '../components/navbar';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from 'react-toastify';
 
 export interface User {
   id: number,
@@ -19,7 +21,8 @@ function MyApp({ Component, pageProps, user }: MyProps) {
   return (
     <>
       <MyNavbar user={user} />
-      <Component {...pageProps} user={user}/>
+      <Component {...pageProps} user={user} />
+      <ToastContainer limit={1}/>
     </>
   )
 }

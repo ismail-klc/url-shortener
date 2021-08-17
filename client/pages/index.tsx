@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Router from 'next/router'
 
 const Home: NextPage = ({ user }: any) => {
+  
   return (
     <div>
       <Head>
@@ -11,7 +12,7 @@ const Home: NextPage = ({ user }: any) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="jumbotron jumbotron-fluid mt-5 bg-light p-5">
+      <div className="jumbotron jumbotron-fluid m-5 bg-light p-5">
         <div className="container">
           <h1 className="display-4">Welcome, Kisa.lt!</h1>
           <p className="lead">Create short urls by Kisa.lt</p>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Form, Card } from 'react-bootstrap'
 import CardResult from '../../components/card-result'
 import Errors from '../../components/errors'
+import withAuth from '../../hocs/withAuth'
 import useRequest from '../../hooks/use-request'
 
 function CreateUrl() {
@@ -78,4 +79,4 @@ function CreateUrl() {
     )
 }
 
-export default CreateUrl
+export default withAuth(CreateUrl)

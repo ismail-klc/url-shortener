@@ -3,6 +3,7 @@ import buildClient from '../../helpers/build-client';
 import { GetServerSideProps } from 'next'
 import { Alert, Button, Table } from 'react-bootstrap';
 import Head from 'next/head';
+import withAuth from '../../hocs/withAuth';
 
 interface UrlEntity {
     id: string;
@@ -63,7 +64,7 @@ function MyUrls({ data }: any) {
                     }
                 </tbody>
             </Table>
-        </div >
+        </div>
     )
 }
 
@@ -86,4 +87,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 }
 
-export default MyUrls
+export default withAuth(MyUrls)

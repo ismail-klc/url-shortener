@@ -5,6 +5,8 @@ import { useState } from 'react'
 import useRequest from '../../hooks/use-request'
 import Router from 'next/router'
 import Errors from '../../components/errors'
+import { toast } from 'react-toastify'
+import Head from 'next/head'
 
 const Login: NextPage = () => {
     const [email, setEmail] = useState<string>("")
@@ -15,7 +17,18 @@ const Login: NextPage = () => {
         body: {
             email, password
         },
-        onSuccess: () => Router.push('/')
+        onSuccess: () => {
+            toast.success('Login success', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            Router.push('/')
+        }
     })
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -24,6 +37,10 @@ const Login: NextPage = () => {
     }
 
     return (
+        <>
+        <Head>
+            <title>Login</title>
+        </Head>
         <Form onSubmit={handleSubmit} className="col-md-6 mx-auto mt-5">
             <Form.Group className="mb-3" >
                 <Form.Label>Email address</Form.Label>
@@ -49,6 +66,7 @@ const Login: NextPage = () => {
                 </Button>
             </Form.Group>
         </Form>
+        </>
     )
 }
 
