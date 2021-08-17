@@ -9,5 +9,8 @@ export class Click {
     shortUrl: string;
 
     @Column()
+    userId: number;
+
+    @Column()
     clicked: number;
 }
