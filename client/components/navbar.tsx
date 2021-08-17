@@ -25,10 +25,10 @@ const MyNavbar: NextPage<Props> = ({ user }) => {
                             user && <>
                                 <NavDropdown title={user.email} id="collasible-nav-dropdown">
                                     <Link href="/urls">
-                                    <a className="dropdown-item">My Urls</a>
+                                        <a className="dropdown-item">My Urls</a>
                                     </Link>
                                     <Link href="/urls/create">
-                                    <a className="dropdown-item">Create Url</a>
+                                        <a className="dropdown-item">Create Url</a>
                                     </Link>
                                 </NavDropdown>
                                 <Link href="/auth/logout" className="nav-item">
@@ -38,9 +38,14 @@ const MyNavbar: NextPage<Props> = ({ user }) => {
                         }
                         {
                             !user &&
-                            <Link href="/auth/login" className="nav-item">
-                                <a className={`nav-link `}>Login</a>
-                            </Link>
+                            <>
+                            <Link href="/auth/signup" className="nav-item">
+                                    <a className={`nav-link `}>Signup</a>
+                                </Link>
+                                <Link href="/auth/login" className="nav-item">
+                                    <a className={`nav-link `}>Login</a>
+                                </Link>
+                            </>
                         }
                     </Nav>
                 </Navbar.Collapse>

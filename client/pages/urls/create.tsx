@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 import { Button, Form, Card } from 'react-bootstrap'
 import CardResult from '../../components/card-result'
@@ -40,42 +41,47 @@ function CreateUrl() {
     }, [completed]);
 
     if (showResult) {
-        return <CardResult 
-        setShowResult={setShowResult}
-        longUrl={data?.originalUrl} 
-        shortUrl={`${window.location.host}/${data?.shortUrl}`} />
-    } 
+        return <CardResult
+            setShowResult={setShowResult}
+            longUrl={data?.originalUrl}
+            shortUrl={`${window.location.host}/${data?.shortUrl}`} />
+    }
 
     return (
-        <Card className="col-md-6 col-12 offset-md-1 mt-5">
-            <Card.Header>Make Short Url</Card.Header>
-            <Card.Body>
-                <Form onSubmit={handleSubmit} >
-                    <Form.Group className="mb-3" >
-                        <Form.Label>Original Url</Form.Label>
-                        <Form.Control
-                            value={originalUrl} onChange={e => setOriginalUrl(e.target.value)}
-                            type="text" placeholder="Enter original url" />
-                    </Form.Group>
-                    <Form.Group className="mb-3" >
-                        <Form.Label>Short Url (Optinal)</Form.Label>
-                        <Form.Control
-                            value={shortUrl} onChange={e => setShortUrl(e.target.value)}
-                            type="text" placeholder="Short url" />
-                        <Form.Text className="text-muted">
-                            Short url is optinal. Find a url between 6-9 characters not used before.
-                        </Form.Text>
-                    </Form.Group>
-                    {
-                        errors.length > 0 &&
-                        <Errors msg={errors} />
-                    }
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
-                </Form>
-            </Card.Body>
-        </Card>
+        <>
+            <Head>
+                <title>Create Url</title>
+            </Head>
+            <Card className="col-md-6 col-12 offset-md-1 mt-5">
+                <Card.Header>Make Short Url</Card.Header>
+                <Card.Body>
+                    <Form onSubmit={handleSubmit} >
+                        <Form.Group className="mb-3" >
+                            <Form.Label>Original Url</Form.Label>
+                            <Form.Control
+                                value={originalUrl} onChange={e => setOriginalUrl(e.target.value)}
+                                type="text" placeholder="Enter original url" />
+                        </Form.Group>
+                        <Form.Group className="mb-3" >
+                            <Form.Label>Short Url (Optinal)</Form.Label>
+                            <Form.Control
+                                value={shortUrl} onChange={e => setShortUrl(e.target.value)}
+                                type="text" placeholder="Short url" />
+                            <Form.Text className="text-muted">
+                                Short url is optinal. Find a url between 6-9 characters not used before.
+                            </Form.Text>
+                        </Form.Group>
+                        {
+                            errors.length > 0 &&
+                            <Errors msg={errors} />
+                        }
+                        <Button variant="primary" type="submit">
+                            Submit
+                        </Button>
+                    </Form>
+                </Card.Body>
+            </Card>
+        </>
     )
 }
 

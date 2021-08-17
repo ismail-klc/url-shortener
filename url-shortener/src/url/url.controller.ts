@@ -1,4 +1,7 @@
-import { Body, Controller, Get, HttpCode, Post, Query, Req, UseGuards } from '@nestjs/common';
+import {
+    Body, Controller, Delete, Get,
+    HttpCode, Param, Post, Query, Req, UseGuards
+} from '@nestjs/common';
 import { UrlService } from './url.service';
 import { Request } from 'express';
 import { CreateUrlDto } from './dtos/create-url.dto';
@@ -8,7 +11,7 @@ declare global {
     namespace Express {
         interface User {
             id: number;
-}
+        }
 
         interface Request {
             user?: User | undefined;
@@ -38,5 +41,12 @@ export class UrlController {
     @UseGuards(AuthGuard)
     getUrlsByUser(@Req() req: Request,) {
         return this.urlService.getUrlsByUserId(req.user.id);
+    }
+
+    @Delete(':id')
+    @HttpCode(200)
+    @UseGuards(AuthGuard)
+    deleteUrl(@Param() params) {
+        return this.urlService.deleteUrlById(params.id);
     }
 }

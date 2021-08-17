@@ -7,6 +7,7 @@ import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class UrlService {
+
     constructor(
         @Inject('URL_SHORTENER_SRV') private client: ClientProxy) { }
 
@@ -67,5 +68,16 @@ export class UrlService {
         });
 
         return urls;
+    }
+
+    async deleteUrlById(id: string) {
+        const urlRepository = getMongoRepository(UrlEntity);
+        const url = await urlRepository.findOne(id)
+
+        if (!url) {
+            throw new NotFoundException('Url not found');
+        }
+
+        return urlRepository.remove(url);
     }
 }

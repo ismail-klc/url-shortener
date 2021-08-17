@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import buildClient from '../../helpers/build-client';
 import { GetServerSideProps } from 'next'
-import { Alert, Table } from 'react-bootstrap';
+import { Alert, Button, Table } from 'react-bootstrap';
 import Head from 'next/head';
 import withAuth from '../../hocs/withAuth';
+import useRequest from '../../hooks/use-request';
+import { toast } from 'react-toastify';
+import Router from 'next/router';
 
 interface UrlEntity {
     id: string;
@@ -15,12 +18,39 @@ interface UrlEntity {
 function MyUrls({ data, clicks }: any) {
     const [isCopied, setIsCopied] = useState(false)
     const [text, setText] = useState('')
+    const [id, setId] = useState('')
+    const { doRequest, errors } = useRequest({
+        url: `/api/url/${id}`,
+        method: 'delete',
+        onSuccess: () => {
+            toast.success('Url deleted successfully', {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            Router.push('/urls')
+        }
+    })
 
     const handleCopy = async (url: string) => {
         navigator.clipboard.writeText(`${window.location.host}/${url}`)
         setIsCopied(true)
         setText(await navigator.clipboard.readText())
     }
+
+    const handleDelete = async (id: string) => {
+        setId(id)
+    }
+
+    useEffect(() => {
+       if (id !== '') {
+           doRequest()
+       }
+    }, [id])
 
     return (
         <div className="col-9 mx-auto mt-5">
@@ -31,7 +61,8 @@ function MyUrls({ data, clicks }: any) {
             {
                 isCopied &&
                 <Alert variant={'info'} onClose={() => setIsCopied(false)} dismissible>
-                    <Alert.Link as="a" href={`${window.location.protocol}//${text}`}>{text}</Alert.Link> copied to clipboard
+                    <Alert.Link as="a" target="_blank"
+                        href={`${window.location.protocol}//${text}`}>{text}</Alert.Link> copied to clipboard
                 </Alert>
             }
             <Table responsive striped bordered hover size="sm" >
@@ -41,7 +72,7 @@ function MyUrls({ data, clicks }: any) {
                         <th>Short Url</th>
                         <th>Original Url</th>
                         <th>Clicked</th>
-                        <th>Expiration Date</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,7 +91,13 @@ function MyUrls({ data, clicks }: any) {
                                     <a href={x.originalUrl} target="_blank">{x.originalUrl}</a>
                                 </td>
                                 <td>{clicks[x.shortUrl] || 0}</td>
-                                <td>{x.expirationDate}</td>
+                                <td>
+                                    <Button
+                                        onClick={() => handleDelete(x.id)}
+                                        className="btn-sm" variant="outline-danger">
+                                        <i className="fa fa-trash" />
+                                    </Button>
+                                </td>
                             </tr>
                         ))
                     }

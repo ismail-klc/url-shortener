@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps, user }: MyProps) {
     <>
       <MyNavbar user={user} />
       <Component {...pageProps} user={user} />
-      <ToastContainer limit={1}/>
+      <ToastContainer />
     </>
   )
 }
